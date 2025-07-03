@@ -19,6 +19,7 @@
         <!-- 精简模块结构 -->
         <module>flow-engine-core</module>
         <module>flow-engine-extension</module>
+        <module>flow-engine-spi</module>
         <module>flow-engine-tenant</module>
         <module>flow-engine-sample</module>
     </modules>
@@ -53,6 +54,11 @@
             <dependency>
                 <groupId>com.wangguangwu</groupId>
                 <artifactId>flow-engine-extension</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wangguangwu</groupId>
+                <artifactId>flow-engine-spi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
