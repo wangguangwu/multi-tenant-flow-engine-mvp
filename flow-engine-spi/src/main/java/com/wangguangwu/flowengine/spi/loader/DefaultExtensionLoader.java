@@ -1,8 +1,8 @@
 package com.wangguangwu.flowengine.spi.loader;
 
 import com.wangguangwu.flowengine.spi.exception.SPIException;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -13,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * MVP SPI扩展点加载器最简实现。
  *
- * @author wangguangwu
  * @param <T> 扩展点类型
+ * @author wangguangwu
  */
 public class DefaultExtensionLoader<T> implements ExtensionLoader<T> {
     private static final String SPI_DIRECTORY = "META-INF/flow-engine/";
@@ -28,6 +28,7 @@ public class DefaultExtensionLoader<T> implements ExtensionLoader<T> {
         loadExtensions();
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> DefaultExtensionLoader<T> getExtensionLoader(Class<T> type) {
         Objects.requireNonNull(type, "Extension type == null");
         if (!type.isInterface()) {
@@ -62,7 +63,9 @@ public class DefaultExtensionLoader<T> implements ExtensionLoader<T> {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         line = line.trim();
-                        if (line.isEmpty() || line.startsWith("#")) continue;
+                        if (line.isEmpty() || line.startsWith("#")) {
+                            continue;
+                        }
                         String name = line;
                         String className = line;
                         int eqIdx = line.indexOf('=');
@@ -70,7 +73,7 @@ public class DefaultExtensionLoader<T> implements ExtensionLoader<T> {
                             name = line.substring(0, eqIdx).trim();
                             className = line.substring(eqIdx + 1).trim();
                         }
-                        if (name.equals("default")) {
+                        if ("default".equals(name)) {
                             defaultName = className;
                         } else {
                             Class<?> clazz = Class.forName(className, true, classLoader);
