@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: flow-engine-tenant-sample
+
+flow:
+  engine:
+    tenant:
+      enabled: true
+      system-tenant-id: system
+      default-tenant-id: default
+      web:
+        enabled: true
+        header-name: X-Tenant-ID
+        param-name: tenantId
+        extract-from-cookie: true
+        cookie-name: tenant_id
+      data-source:
+        enabled: true
+        auto-create: false
+        type: DYNAMIC
+
+logging:
+  level:
+    com.wangguangwu.flowengine: DEBUG
