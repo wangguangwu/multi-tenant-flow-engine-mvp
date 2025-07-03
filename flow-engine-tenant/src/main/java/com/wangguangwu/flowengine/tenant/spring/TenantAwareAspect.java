@@ -44,17 +44,22 @@ public class TenantAwareAspect {
         // 获取当前租户上下文
         TenantContext tenantContext = TenantContextHolder.getContext();
         
-        // 检查是否需要租户上下文
-        if (tenantAware.required() && tenantContext == null) {
-            throw new TenantNotFoundException("租户上下文不存在，但方法要求必须有租户上下文: " + method);
+        try {
+            // 检查是否需要租户上下文
+            if (tenantAware.required() && tenantContext == null) {
+                throw new TenantNotFoundException("租户上下文不存在，但方法要求必须有租户上下文: " + method);
+            }
+            
+            // 检查是否允许系统租户
+            if (!tenantAware.allowSystemTenant() && tenantContext != null && tenantContext.systemTenant()) {
+                throw new IllegalStateException("方法不允许系统租户访问: " + method);
+            }
+            
+            // 执行原方法
+            return pjp.proceed();
+        } finally {
+            // 清理租户上下文
+            TenantContextHolder.clearContext();
         }
-        
-        // 检查是否允许系统租户
-        if (!tenantAware.allowSystemTenant() && tenantContext != null && tenantContext.systemTenant()) {
-            throw new IllegalStateException("方法不允许系统租户访问: " + method);
-        }
-        
-        // 执行原方法
-        return pjp.proceed();
     }
 }

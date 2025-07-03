@@ -5,7 +5,6 @@ import com.wangguangwu.flowengine.tenant.api.TenantContext;
 import java.util.concurrent.Callable;
 
 /**
- * // TODO：这个类是必须要的吗，是在子实现使用吗
  * 租户上下文传播器
  * <p>
  * 用于在父子线程之间传递租户上下文
@@ -38,12 +37,8 @@ public class TenantContextPropagator {
                 // 执行原始任务
                 runnable.run();
             } finally {
-                // 恢复子线程原有的租户上下文或清除
-                if (originalContext != null) {
-                    TenantContextHolder.setContext(originalContext);
-                } else {
-                    TenantContextHolder.clearContext();
-                }
+                // 清除租户上下文，不恢复原有上下文
+                TenantContextHolder.clearContext();
             }
         };
     }
@@ -72,12 +67,8 @@ public class TenantContextPropagator {
                 // 执行原始任务并返回结果
                 return callable.call();
             } finally {
-                // 恢复子线程原有的租户上下文或清除
-                if (originalContext != null) {
-                    TenantContextHolder.setContext(originalContext);
-                } else {
-                    TenantContextHolder.clearContext();
-                }
+                // 清除租户上下文，不恢复原有上下文
+                TenantContextHolder.clearContext();
             }
         };
     }
