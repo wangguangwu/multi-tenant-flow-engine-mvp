@@ -73,12 +73,13 @@ public class DefaultExtensionLoader<T> implements ExtensionLoader<T> {
                             name = line.substring(0, eqIdx).trim();
                             className = line.substring(eqIdx + 1).trim();
                         }
+                        
+                        Class<?> clazz = Class.forName(className, true, classLoader);
+                        T instance = type.cast(clazz.getDeclaredConstructor().newInstance());
+                        instances.put(name, instance);
+                        
                         if ("default".equals(name)) {
-                            defaultName = className;
-                        } else {
-                            Class<?> clazz = Class.forName(className, true, classLoader);
-                            T instance = type.cast(clazz.getDeclaredConstructor().newInstance());
-                            instances.put(name, instance);
+                            defaultName = name;
                         }
                     }
                 }
